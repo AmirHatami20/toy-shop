@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme inline {
+    --color-primary: #ff7a00;
+    --color-primary-dark: #e86f00;
+}
+
+@layer utilities {
+    .container {
+        margin-inline: auto;
+        position: relative;
+        width: 90% !important;
+
+        @variant sm {
+            max-width: 640px;
+        }
+        @variant md {
+            max-width: 768px;
+        }
+        @variant lg {
+            max-width: 1024px;
+        }
+        @variant xl {
+            max-width: 1280px !important;
+        }
+    }
+
+    .shadowed-text {
+        @apply text-primary text-shadow-xs text-shadow-slate-500;
+    }
+
+    .primary-button {
+        @apply flex items-center justify-center gap-x-2 bg-primary hover:bg-primary-dark text-white rounded font-semibold p-2 transition-colors duration-300;
+    }
+
+    .primary-button-pending {
+        @apply flex items-center justify-center gap-x-2 bg-gray-400 cursor-not-allowed text-white font-semibold p-2 rounded;
+    }
+
+    .auth-input {
+        @apply w-full mt-1 text-sm bg-slate-50 border-primary/50 p-2 rounded focus-within:outline-primary;
+    }
+
+    .header-button {
+        @apply flex items-center justify-center size-12 my-2 rounded-full bg-gray-100 hover:bg-gray-200 text-slate-700 transition text-2xl;
+    }
+
+    .header-menu__item {
+        @apply w-full flex items-center gap-x-2.5 px-2.5 py-2.5 rounded-md text-[22px] hover:text-white transition-colors;
+    }
+
+    .admin-input {
+        @apply w-full h-full rounded-sm border border-[#CBD5E1] bg-white text-sm px-3 py-2 placeholder-gray-600
+    }
+
+    .section-header__wrapper {
+        @apply flex flex-col gap-y-1;
+    }
+
+    .section-header__title {
+        @apply text-2xl font-bold;
+    }
+
+    .section-header__title-white{
+        @apply text-2xl font-bold text-white;
+    }
+
+    .section-header__subtitle {
+        @apply text-gray-700 border-b-2 border-primary hidden md:block;
+    }
+
+    .section-header__subtitle-white {
+        @apply text-white hidden md:block;
+    }
+
+    .swiper-button {
+        @apply bg-white hover:bg-slate-200 active:bg-slate-200 text-primary border border-primary text-[22px] p-2.5 rounded-full;
+    }
+}
+
+@layer base {
+    button {
+        cursor: pointer;
+    }
+}

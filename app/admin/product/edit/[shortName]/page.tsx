@@ -1,0 +1,15 @@
+'use client';
+
+import {useParams} from 'next/navigation';
+import ProductForm from '@/components/admin/Form/ProductForm';
+
+export default function EditProductPage() {
+    const {shortName} = useParams<{ shortName: string }>();
+
+    return (
+        <div className="p-6 bg-gray-50 min-h-screen rounded-lg shadow-sm">
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">ویرایش محصول</h1>
+            <ProductForm shortName={shortName}/>
+        </div>
+    );
+}
