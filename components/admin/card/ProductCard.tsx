@@ -36,7 +36,7 @@ export default function ProductCard({product}: { product: ProductType }) {
                                 ) : null
                             }
                             <p className="text-gray-700 text-sm font-medium">
-                                {product.finalPrice.toLocaleString("fa-IR")}{" "}
+                                {product.finalPrice?.toLocaleString("fa-IR")}{" "}
                                 <span className="text-primary">تومان</span>
                             </p>
 

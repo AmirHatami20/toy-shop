@@ -99,7 +99,8 @@ export default function ProductCartCard({item}: { item: ProductCartItem }) {
                     />
                 ) : (
                     <div className="w-14 h-8 flex items-center justify-center border border-gray-300 rounded py-1">
-                        <div className="w-4 h-4 border-2 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
+                        <div
+                            className="w-4 h-4 border-2 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
                     </div>
                 )}
 
@@ -112,9 +113,8 @@ export default function ProductCartCard({item}: { item: ProductCartItem }) {
                 </button>
             </div>
 
-            {/* جمع مبلغ */}
             <div className="hidden sm:flex font-semibold text-lg text-primary-dark">
-                {(inputValue * item.product.finalPrice).toLocaleString("fa-IR")} تومان
+                {(inputValue * (item.product.finalPrice ?? 0)).toLocaleString("fa-IR")} تومان
             </div>
 
             {/* حذف آیتم با toast و spinner */}
@@ -125,7 +125,8 @@ export default function ProductCartCard({item}: { item: ProductCartItem }) {
                             hover:bg-gray-400 ${isDeleting ? "cursor-not-allowed" : ""}`}
             >
                 {isDeleting ? (
-                    <div className="w-4 h-4 border-2 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
+                    <div
+                        className="w-4 h-4 border-2 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
                 ) : (
                     <GoTrash size={15}/>
                 )}

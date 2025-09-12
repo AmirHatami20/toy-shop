@@ -27,7 +27,7 @@ export type ProductType = {
     shortName: string;
     description?: string;
     price: number;
-    finalPrice: number;
+    finalPrice?: number;
     stock: number;
     discount?: number;
     images: (string | File)[];
