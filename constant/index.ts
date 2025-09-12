@@ -81,7 +81,7 @@ export const CATEGORIES_DATA = [
         subtitle: "خرید انواع جا سوییچی",
         color1: "#38bdf8", // sky-400
         color2: "#a1daf8", // sky-200
-        image: "/categories/keychain.png",
+        image: "/categories/keyChain.png",
     },
 ];
 
