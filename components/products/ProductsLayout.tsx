@@ -9,12 +9,13 @@ import {SORT_BY} from "@/constant";
 import FilterModal from "@/components/modals/FilterModal";
 import SortModal from "@/components/modals/SortModal";
 
-import {useSearchParams} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import ProductFilter from "@/components/products/ProductFilter";
 import ProductGrid from "@/components/products/ProductGrid";
 
 export default function ProductsLayout({categories}: { categories: CategoryType[] }) {
     const searchParams = useSearchParams();
+    const router = useRouter();
 
     const initialSearch = searchParams.get("search") || "";
     const initialCategory = searchParams.get("category") || "";
@@ -58,6 +59,7 @@ export default function ProductsLayout({categories}: { categories: CategoryType[
         setSelectedCategory("");
         setSortBy("newest");
         setPage(1);
+        router.push("/products");
     };
 
     return (
