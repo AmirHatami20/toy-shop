@@ -7,6 +7,7 @@ import {IoWalletOutline} from "react-icons/io5";
 import {ProductCartItem} from "@/types";
 import ProductCartCard from "@/components/card/ProductCartCard";
 import Loader from "@/components/Loader";
+import Link from "next/link";
 
 export default function Page() {
     const {data: cart, isLoading} = useGetCart();
@@ -40,11 +41,16 @@ export default function Page() {
         );
     }
 
-    if (!isLoading && !cartProducts && cartProducts?.length === 0) {
+    if (!isLoading && cartProducts?.length === 0) {
         return (
             <main className="container my-12">
-                <section className="bg-white shadow rounded-md p-6 text-center">
+                <section className="flex flex-col gap-4 items-center justify-center bg-white shadow rounded-md p-6">
                     سبد خرید شما خالی است
+                    <Link href="/products">
+                        <button className="primary-button">
+                            لیست محصولات
+                        </button>
+                    </Link>
                 </section>
             </main>
         );
@@ -54,12 +60,12 @@ export default function Page() {
         <main className="container my-12">
             <section className="grid grid-cols-12 gap-y-5 gap-6 lg:gap-x-7">
                 {/* سبد خرید */}
-                <div className="col-span-full md:col-span-8 rounded-md overflow-hidden bg-white shadow">
+                <div className="col-span-full lg:col-span-8 rounded-md overflow-hidden bg-white shadow">
                     <div className="flex items-center gap-x-2 px-4 h-14 bg-primary text-white">
                         <PiBasketBold size={30}/>
                         <span className="font-bold text-lg md:text-xl">سبد خرید</span>
                     </div>
-                    <div className="flex flex-col p-4 gap-4">
+                    <div className="flex flex-col p-4 gap-2">
                         {cartProducts?.map((item: ProductCartItem) => (
                             <ProductCartCard key={item.product._id} item={item}/>
                         ))}
@@ -67,7 +73,7 @@ export default function Page() {
                 </div>
 
                 {/* اطلاعات پرداخت */}
-                <div className="col-span-full md:col-span-4 rounded-md overflow-hidden bg-white shadow">
+                <div className="col-span-full lg:col-span-4 rounded-md overflow-hidden h-fit bg-white shadow">
                     <div className="flex items-center gap-x-2 px-4 h-14 bg-primary text-white">
                         <IoWalletOutline size={30}/>
                         <span className="font-bold text-lg md:text-xl">اطلاعات پرداخت</span>
@@ -79,12 +85,10 @@ export default function Page() {
                             <span className="font-semibold">{basketTotal.toLocaleString("fa-IR")} تومان</span>
                         </div>
 
-                        {basketDiscount > 0 && (
-                            <div className="flex justify-between items-center text-sm md:text-base text-green-600">
-                                <span>تخفیف:</span>
-                                <span className="font-semibold">{basketDiscount.toLocaleString("fa-IR")} تومان</span>
-                            </div>
-                        )}
+                        <div className="flex justify-between items-center text-sm md:text-base text-green-600">
+                            <span>تخفیف:</span>
+                            <span className="font-semibold">{basketDiscount?.toLocaleString("fa-IR")} تومان</span>
+                        </div>
 
                         <div
                             className="flex justify-between items-center text-base md:text-lg border-t border-gray-200 pt-3 mt-2 font-bold">

@@ -12,7 +12,6 @@ export default function ProductBasketCard({item}: { item: ProductCartItem }) {
         deleteItem.mutate(item.product._id as string);
         toast.success("محصول از سبد خرید شما حذف شد.");
     };
-    console.log(item)
 
     return (
         <div className="flex items-center justify-between px-3 py-3">

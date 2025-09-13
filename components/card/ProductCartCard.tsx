@@ -11,7 +11,6 @@ export default function ProductCartCard({item}: { item: ProductCartItem }) {
     const updateQuantity = useUpdateCartItem();
     const deleteCartItem = useDeleteCartItem();
     const [inputValue, setInputValue] = useState(item.quantity);
-    const [isDeleting, setIsDeleting] = useState(false);
 
     const handleIncrease = () => {
         const newQty = inputValue + 1;
@@ -37,100 +36,95 @@ export default function ProductCartCard({item}: { item: ProductCartItem }) {
         updateQuantity.mutate({productId: item.product._id as string, quantity: inputValue});
     };
 
-    // فانکشن جدا برای حذف آیتم با toast
     const handleDelete = async () => {
-        setIsDeleting(true);
         try {
             await deleteCartItem.mutateAsync(item.product._id as string);
             toast.success("محصول از سبد خرید حذف شد");
         } catch (error) {
             console.error(error);
             toast.error("خطا در حذف محصول");
-        } finally {
-            setIsDeleting(false);
         }
     };
 
     return (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-5 p-4 border-b border-gray-200">
-            {/* تصویر و اطلاعات محصول */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-y-3 gap-x-5 flex-1">
-                <Link href={`/product/${item.product.shortName}`}>
+        <div className="flex flex-col md:flex-row justify-between gap-5 p-2 md:p-4 border-b border-gray-200 relative">
+            {/* بخش تصویر و عنوان */}
+            <div className="flex items-center flex-col sm:flex-row gap-3">
+                <Link href={`/product/${item.product.shortName}`} className="w-full sm:w-auto">
                     <img
                         src={item.product.images[0]}
                         alt={item.product.title}
-                        className="sm:h-22 rounded-xl w-full sm:w-auto"
+                        className="h-40 sm:h-24 w-full sm:w-26 object-cover object-top rounded-md"
                     />
                 </Link>
-                <div className="flex flex-col gap-y-1">
-                    <Link href={`/product/${item.product.shortName}`} className="font-semibold">
-                        {item.product.title}
-                    </Link>
-                    <div className="flex gap-x-2 items-center text-sm">
-                        {item.product?.discount ? (
-                            <span className="text-gray-400 line-through">
-                                {item.product.price?.toLocaleString("fa-IR")} تومان
+                <div className="flex flex-col gap-1.5">
+                    <span className="text-lg font-semibold">{item.product.title}</span>
+                    <div className="flex gap-x-1 items-center">
+                        <span>قیمت:</span>
+                        {item.product.discount ? (
+                            <span className="text-gray-400 line-through text-[13px] pb-2">
+                             {item.product.price?.toLocaleString("fa-IR")}
                             </span>
-                        ) : null}
-                        <span className="font-semibold">
-                            {item.product.finalPrice?.toLocaleString("fa-IR")} تومان
+                        ) : null
+                        }
+                        <span className="text-sm text-gray-800">
+                          {item.product.finalPrice?.toLocaleString("fa-IR")} تومان
                         </span>
                     </div>
                 </div>
             </div>
 
-            {/* کنترل تعداد */}
-            <div className="flex items-center gap-2 mt-3 sm:mt-0">
-                <button
-                    className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded hover:bg-gray-300"
-                    onClick={handleDecrease}
-                    disabled={updateQuantity.isPending}
-                >
-                    -
-                </button>
+            {/* بخش کنترل‌ها */}
+            <div className="flex items-center gap-x-3">
+                <div className="flex items-center gap-x-1">
+                    <button
+                        className="flex items-center justify-center h-7 w-7 text-lg bg-gray-100 border border-gray-300 rounded"
+                        onClick={handleDecrease}
+                    >
+                        -
+                    </button>
 
-                {!updateQuantity.isPending ? (
-                    <input
-                        type="text"
-                        value={inputValue.toLocaleString("fa-IR")}
-                        onChange={handleChangeQuantity}
-                        onBlur={handleBlur}
-                        className="w-14 text-center border border-gray-300 rounded py-1"
-                    />
-                ) : (
-                    <div className="w-14 h-8 flex items-center justify-center border border-gray-300 rounded py-1">
+                    {!updateQuantity.isPending ? (
+                        <input
+                            type="text"
+                            className="w-10 h-7 text-center border border-gray-300 outline-none bg-white rounded"
+                            max={item.product.stock}
+                            min={1}
+                            value={inputValue.toLocaleString("fa-IR")}
+                            onChange={handleChangeQuantity}
+                            onBlur={handleBlur}
+                        />
+                    ) : (
+                        <div className="w-10 h-7 flex items-center justify-center bg-gray-200 rounded">
+                            <div
+                                className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    )}
+
+                    <button
+                        className="flex items-center justify-center h-7 w-7 text-lg bg-gray-100 border border-gray-300 rounded"
+                        onClick={handleIncrease}
+                    >
+                        +
+                    </button>
+                </div>
+
+                <span className="text-lg font-semibold text-primary-dark">
+                    {((inputValue * (item.product.finalPrice ?? 0))).toLocaleString("fa-IR")} تومان
+                </span>
+
+                <button
+                    className="absolute top-2 left-2 sm:top-0 sm:left-0 sm:relative flex justify-center items-center text-sm text-red-500 bg-gray-100 rounded-full w-7 h-7 hover:bg-gray-200 transition border border-gray-300"
+                    onClick={handleDelete}
+                >
+                    {!deleteCartItem.isPending ? (
+                        <GoTrash/>
+                    ) : (
                         <div
-                            className="w-4 h-4 border-2 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
-                    </div>
-                )}
-
-                <button
-                    className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded hover:bg-gray-300"
-                    onClick={handleIncrease}
-                    disabled={updateQuantity.isPending}
-                >
-                    +
+                            className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                    )}
                 </button>
             </div>
-
-            <div className="hidden sm:flex font-semibold text-lg text-primary-dark">
-                {(inputValue * (item.product.finalPrice ?? 0)).toLocaleString("fa-IR")} تومان
-            </div>
-
-            {/* حذف آیتم با toast و spinner */}
-            <button
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className={`text-red-500 bg-gray-200 shadow w-8 h-8 flex items-center justify-center rounded-full transition 
-                            hover:bg-gray-400 ${isDeleting ? "cursor-not-allowed" : ""}`}
-            >
-                {isDeleting ? (
-                    <div
-                        className="w-4 h-4 border-2 border-t-transparent border-gray-500 rounded-full animate-spin"></div>
-                ) : (
-                    <GoTrash size={15}/>
-                )}
-            </button>
         </div>
     );
 }

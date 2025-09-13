@@ -14,7 +14,7 @@ import {HEADER_NAV, HEADER_USER_MENU} from "@/constant";
 import {LiaAngleLeftSolid} from "react-icons/lia";
 import {RiAdminLine} from "react-icons/ri";
 import {IoIosArrowDown} from "react-icons/io";
-import {CartType, CategoryType, ProductCartItem, UserType} from "@/types";
+import {CategoryType, ProductCartItem, UserType} from "@/types";
 import ProductBasketCard from "@/components/card/ProductBasketCard";
 import {useGetCart} from "@/hooks/useCart";
 
