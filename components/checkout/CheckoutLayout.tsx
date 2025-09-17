@@ -158,7 +158,7 @@ export default function CheckoutLayout({user}: Props) {
                             <div className="flex items-center justify-center px-3 py-4">
                                 <button
                                     onClick={handleSubmitOrder}
-                                    className={createOrderMutation.isPending ? "primary-button w-full" : "primary-button-pending w-full"}
+                                    className={!createOrderMutation.isPending ? "primary-button w-full" : "primary-button-pending w-full"}
                                     disabled={createOrderMutation.isPending}
                                 >
                                     {createOrderMutation.isPending ? "در حال ثبت" : "ثبت سفارش"}
