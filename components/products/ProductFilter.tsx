@@ -28,7 +28,7 @@ export default function ProductFilter(
         <div className="w-full lg:w-1/4">
             {/* Search */}
             <div className="h-16 bg-white rounded-md p-4 md:p-5">
-                <div className="flex justify-between gap-x-6 h-full text-slate-500 dark:text-white">
+                <div className="flex justify-between gap-x-6 h-full text-slate-500">
                     <input
                         type="text"
                         className="md:font-danaMedium placeholder-slate-500 bg-transparent flex-grow outline-none"

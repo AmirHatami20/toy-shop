@@ -57,21 +57,25 @@ export default function ProductForm({shortName}: { shortName?: string }) {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const {name, value} = e.target;
+
         if (name in form.attributes) {
-            setForm((prev) => ({
+            setForm(prev => ({
                 ...prev,
                 attributes: {
                     ...prev.attributes,
-                    [name]: name === 'pieces' ? Number(value) : value,
+                    [name]: name === 'pieces' ? value.replace(/\D/g, "") : value,
                 },
             }));
         } else {
-            setForm((prev) => ({
-                ...prev,
-                [name]: ['price', 'stock', 'discount'].includes(name) ? Number(value) : value,
-            }));
+            if (['price', 'stock', 'discount'].includes(name)) {
+                const num = value.replace(/\D/g, "");
+                setForm(prev => ({...prev, [name]: num}));
+            } else {
+                setForm(prev => ({...prev, [name]: value,}));
+            }
         }
     };
+
 
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -121,6 +125,7 @@ export default function ProductForm({shortName}: { shortName?: string }) {
         }
 
         const formData = new FormData();
+
         Object.entries(form).forEach(([key, val]) => {
             if (val != null && key !== 'images') {
                 if (key === 'attributes') {
