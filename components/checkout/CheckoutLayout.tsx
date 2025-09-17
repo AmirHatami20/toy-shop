@@ -6,9 +6,10 @@ import {IoMdInformationCircleOutline} from "react-icons/io";
 import CheckoutForm from "@/components/checkout/Form/CheckoutForm";
 import {AddressFormData, CreateOrderBody, ProductCartItem, UserType} from "@/types";
 import {useGetCart} from "@/hooks/useCart";
-import {useCreateOrder} from "@/hooks/useOrder"; // <- اضافه شد
+import {useCreateOrder} from "@/hooks/useOrder";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import {redirect} from "next/navigation";
 
 interface Props {
     user: UserType | null;
@@ -99,6 +100,7 @@ export default function CheckoutLayout({user}: Props) {
         createOrderMutation.mutate(orderData, {
             onSuccess: () => {
                 toast.success("سفارش شما ثبت شد!");
+                redirect("/")
             },
         });
     };
@@ -154,8 +156,12 @@ export default function CheckoutLayout({user}: Props) {
                             </div>
 
                             <div className="flex items-center justify-center px-3 py-4">
-                                <button onClick={handleSubmitOrder} className="primary-button w-full">
-                                    ثبت سفارش
+                                <button
+                                    onClick={handleSubmitOrder}
+                                    className={createOrderMutation.isPending ? "primary-button w-full" : "primary-button-pending w-full"}
+                                    disabled={createOrderMutation.isPending}
+                                >
+                                    {createOrderMutation.isPending ? "در حال ثبت" : "ثبت سفارش"}
                                 </button>
                             </div>
                         </>

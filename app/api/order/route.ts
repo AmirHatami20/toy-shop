@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
 
         const newOrder = await Order.create({...data, totalPrice});
 
-        await Cart.findOneAndDelete({ userId: session.user.id });
+        await Cart.findOneAndDelete({ user: session.user.id });
 
         return NextResponse.json(newOrder, {status: 201});
     } catch (error) {
