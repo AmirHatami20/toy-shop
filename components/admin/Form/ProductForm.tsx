@@ -10,6 +10,7 @@ import {useCreateProduct, useUpdateProduct, useGetProduct} from '@/hooks/useProd
 import {useGetCategories} from '@/hooks/useCategory';
 import FormField from '@/components/admin/Form/FormField';
 import {GoTrash} from 'react-icons/go';
+import {AxiosError} from "axios";
 
 export default function ProductForm({shortName}: { shortName?: string }) {
     const [form, setForm] = useState<ProductType>({
@@ -108,7 +109,6 @@ export default function ProductForm({shortName}: { shortName?: string }) {
         URL.revokeObjectURL(src);
     };
 
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -158,8 +158,10 @@ export default function ProductForm({shortName}: { shortName?: string }) {
                 });
                 setImagePreviews([]);
             }
-        } catch {
-            toast.error('خطا در ذخیره محصول');
+        } catch (error) {
+            const err = error as AxiosError<{ message?: string }>;
+            const message = err.response?.data?.message || "خطایی رخ داده است.";
+            toast.error(message);
         }
     };
 
