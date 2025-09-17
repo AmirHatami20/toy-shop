@@ -9,7 +9,7 @@ import {useGetCart} from "@/hooks/useCart";
 import {useCreateOrder} from "@/hooks/useOrder";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import {redirect} from "next/navigation";
+import {useRouter} from "next/navigation";
 
 interface Props {
     user: UserType | null;
@@ -28,6 +28,8 @@ export default function CheckoutLayout({user}: Props) {
         apartment: 0,
         postalCode: "",
     });
+
+    const router = useRouter();
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const {data: userCart, isLoading} = useGetCart();
@@ -100,7 +102,7 @@ export default function CheckoutLayout({user}: Props) {
         createOrderMutation.mutate(orderData, {
             onSuccess: () => {
                 toast.success("سفارش شما ثبت شد!");
-                redirect("/")
+                router.push("/")
             },
         });
     };
