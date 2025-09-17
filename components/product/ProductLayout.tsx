@@ -11,6 +11,7 @@ import Link from "next/link";
 import {BiAddToQueue} from "react-icons/bi";
 import {PiBasketLight} from "react-icons/pi";
 import ProductGallery from "@/components/product/ProductGallery";
+import {useGuestCart} from "@/context/GuestCartContext";
 
 interface Props {
     product: ProductType;
@@ -27,20 +28,22 @@ export default function ProductLayout({product, relatedProducts}: Props) {
     const user = session?.user;
 
     const addToCartMutation = useAddToCart();
+    const guestCart = useGuestCart();
 
     const handleAddToBasket = async () => {
-        if (!user) {
-            toast.error("ابتدا در سایت وارد شوید.");
-            return;
-        }
-
         if (product.stock <= 0) {
             toast.error("محصول ناموجود است");
             return;
         }
 
         try {
-            await addToCartMutation.mutateAsync({productId: product._id as string, quantity});
+            if (user) {
+                // کاربر لاگین شده → API
+                await addToCartMutation.mutateAsync({productId: product._id as string, quantity});
+            } else {
+                // مهمان → localStorage
+                guestCart.addItem(product, quantity);
+            }
             toast.success("محصول به سبد خرید اضافه شد");
         } catch (err) {
             console.error(err);

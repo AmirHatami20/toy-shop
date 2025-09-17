@@ -50,7 +50,11 @@
     }
 
     .admin-input {
-        @apply w-full h-full rounded-sm border border-[#CBD5E1] bg-white text-sm px-3 py-2 placeholder-gray-600
+        @apply w-full h-full rounded-sm border border-[#CBD5E1] bg-white text-sm px-3 py-2 placeholder-gray-600;
+    }
+
+    .checkout-input {
+        @apply w-full h-full rounded-xl bg-gray-100 border border-gray-300 text-sm px-3 py-2 text-black placeholder-gray-500;
     }
 
     .section-header__wrapper {
@@ -61,7 +65,7 @@
         @apply text-2xl font-bold;
     }
 
-    .section-header__title-white{
+    .section-header__title-white {
         @apply text-2xl font-bold text-white;
     }
 

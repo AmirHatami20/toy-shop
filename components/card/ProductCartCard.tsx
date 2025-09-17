@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, {useState} from 'react';
 import Link from "next/link";
@@ -6,24 +6,42 @@ import {ProductCartItem} from "@/types";
 import {useDeleteCartItem, useUpdateCartItem} from "@/hooks/useCart";
 import {GoTrash} from "react-icons/go";
 import toast from "react-hot-toast";
+import {useGuestCart} from "@/context/GuestCartContext";
+import {useSession} from "next-auth/react";
 
-export default function ProductCartCard({item}: { item: ProductCartItem }) {
+interface Props {
+    item: ProductCartItem;
+}
+
+export default function ProductCartCard({item}: Props) {
+    const {data: session} = useSession();
+    const user = session?.user;
+
+    const guestCartContext = useGuestCart();
     const updateQuantity = useUpdateCartItem();
     const deleteCartItem = useDeleteCartItem();
+
     const [inputValue, setInputValue] = useState(item.quantity);
+
+    const handleUpdateQuantity = (qty: number) => {
+        if (user) {
+            updateQuantity.mutate({productId: item.product._id as string, quantity: qty});
+        } else {
+            guestCartContext.updateItem(item.product._id as string, qty);
+        }
+    };
 
     const handleIncrease = () => {
         const newQty = inputValue + 1;
         setInputValue(newQty);
-        updateQuantity.mutate({productId: item.product._id as string, quantity: newQty});
+        handleUpdateQuantity(newQty);
     };
 
     const handleDecrease = () => {
-        if (inputValue > 1) {
-            const newQty = inputValue - 1;
-            setInputValue(newQty);
-            updateQuantity.mutate({productId: item.product._id as string, quantity: newQty});
-        }
+        if (inputValue <= 1) return;
+        const newQty = inputValue - 1;
+        setInputValue(newQty);
+        handleUpdateQuantity(newQty);
     };
 
     const handleChangeQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,18 +51,24 @@ export default function ProductCartCard({item}: { item: ProductCartItem }) {
     };
 
     const handleBlur = () => {
-        updateQuantity.mutate({productId: item.product._id as string, quantity: inputValue});
+        handleUpdateQuantity(inputValue);
     };
 
-    const handleDelete = async () => {
+    const handleDelete = () => {
         try {
-            await deleteCartItem.mutateAsync(item.product._id as string);
+            if (user) {
+                deleteCartItem.mutate(item.product._id as string);
+            } else {
+                guestCartContext.removeItem(item.product._id as string);
+            }
             toast.success("محصول از سبد خرید حذف شد");
         } catch (error) {
             console.error(error);
             toast.error("خطا در حذف محصول");
         }
     };
+
+    const totalPrice = (inputValue * (item.product.finalPrice ?? 0)).toLocaleString("fa-IR");
 
     return (
         <div className="flex flex-col md:flex-row justify-between gap-5 p-2 md:p-4 border-b border-gray-200 relative">
@@ -63,13 +87,12 @@ export default function ProductCartCard({item}: { item: ProductCartItem }) {
                         <span>قیمت:</span>
                         {item.product.discount ? (
                             <span className="text-gray-400 line-through text-[13px] pb-2">
-                             {item.product.price?.toLocaleString("fa-IR")}
-                            </span>
-                        ) : null
-                        }
+                {item.product.price?.toLocaleString("fa-IR")}
+              </span>
+                        ) : null}
                         <span className="text-sm text-gray-800">
-                          {item.product.finalPrice?.toLocaleString("fa-IR")} تومان
-                        </span>
+              {item.product.finalPrice?.toLocaleString("fa-IR")} تومان
+            </span>
                     </div>
                 </div>
             </div>
@@ -110,12 +133,13 @@ export default function ProductCartCard({item}: { item: ProductCartItem }) {
                 </div>
 
                 <span className="text-lg font-semibold text-primary-dark">
-                    {((inputValue * (item.product.finalPrice ?? 0))).toLocaleString("fa-IR")} تومان
-                </span>
+          {totalPrice} تومان
+        </span>
 
                 <button
                     className="absolute top-2 left-2 sm:top-0 sm:left-0 sm:relative flex justify-center items-center text-sm text-red-500 bg-gray-100 rounded-full w-7 h-7 hover:bg-gray-200 transition border border-gray-300"
                     onClick={handleDelete}
+                    disabled={deleteCartItem.isPending}
                 >
                     {!deleteCartItem.isPending ? (
                         <GoTrash/>

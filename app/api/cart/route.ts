@@ -24,7 +24,6 @@ export async function POST(req: NextRequest) {
     try {
         await connectDB();
         const session = await auth();
-        console.log(session);
 
         if (!session?.user?.id) {
             return NextResponse.json({message: "کاربر یافت نشد."}, {status: 401});

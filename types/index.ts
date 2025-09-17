@@ -58,3 +58,30 @@ export interface CartType {
     status: "active" | "ordered";
 }
 
+export interface AddressFormData {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    province: string;
+    city: string;
+    street: string;
+    alley: string;
+    buildingNumber: number;
+    apartment: number;
+    postalCode: string;
+}
+
+
+export interface OrderItem {
+    product: string;
+    quantity: number;
+    finalPrice: number;
+}
+
+export interface CreateOrderBody {
+    userId: string;
+    items: OrderItem[];
+    shippingAddress: AddressFormData;
+    paymentId?: string;
+    totalPrice?: number;
+}

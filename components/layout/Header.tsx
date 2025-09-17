@@ -16,12 +16,13 @@ import {RiAdminLine} from "react-icons/ri";
 import {IoIosArrowDown} from "react-icons/io";
 import {CategoryType, ProductCartItem, UserType} from "@/types";
 import ProductBasketCard from "@/components/card/ProductBasketCard";
+import {useGuestCart} from "@/context/GuestCartContext"
 import {useGetCart} from "@/hooks/useCart";
 
 type MenuKey = "sidebar" | "userMenu" | "basket" | "categories";
 
 interface Props {
-    user: UserType;
+    user: UserType | null;
     categories: CategoryType[];
 }
 
@@ -32,21 +33,32 @@ export default function Header({user, categories}: Props) {
         basket: false,
         categories: false,
     });
-
     const [search, setSearch] = useState("");
-
-    const {data: cart, isLoading: isLoadingCart} = useGetCart();
-
-    const basketCount: number = cart?.items?.reduce((acc: number, item: ProductCartItem) => acc + item.quantity, 0) || 0;
-    const basketTotal: number = cart?.items?.reduce((acc: number, item: ProductCartItem) => acc + item.product.price * item.quantity, 0) || 0;
 
     const pathname = usePathname();
     const router = useRouter();
 
+    const {data: userCart, isLoading: isLoadingUserCart} = useGetCart(); // user Cart
+    const guestCartContext = useGuestCart(); // guest Cart
+
+    const cartItems: ProductCartItem[] = user ? userCart?.items || [] : guestCartContext.items;
+
+    const {basketCount, basketTotal} = cartItems.reduce(
+        (acc, item) => {
+            const qty = item.quantity ?? 0;
+            const price = item.product.finalPrice ?? item.product.price ?? 0;
+
+            acc.basketCount += qty;
+            acc.basketTotal += price * qty;
+
+            return acc;
+        },
+        {basketCount: 0, basketTotal: 0}
+    );
+
     useEffect(() => {
         setOpen({sidebar: false, userMenu: false, basket: false, categories: false});
     }, [pathname]);
-
 
     const handleLogout = () => {
         setOpen(prev => ({...prev, sidebar: false}));
@@ -69,12 +81,7 @@ export default function Header({user, categories}: Props) {
     return (
         <header className="bg-white shadow-lg h-18 md:h-20">
             <div className="container h-full flex justify-between items-center">
-
-                {/* Mobile menu button */}
-                <button
-                    className="header-button relative md:!hidden"
-                    onClick={() => toggle("sidebar")}
-                >
+                <button className="header-button relative md:!hidden" onClick={() => toggle("sidebar")}>
                     <RxHamburgerMenu/>
                 </button>
 
@@ -100,27 +107,23 @@ export default function Header({user, categories}: Props) {
 
                 {/* Search */}
                 <div
-                    className="hidden md:flex items-center w-lg rounded-full bg-gray-100 border border-gray-300 relative">
+                    className="hidden md:flex items-center w-lg rounded-full bg-gray-100 border border-gray-300 relative"
+                >
                     {/* Categories */}
-                    <div
-                        className="px-3 py-2 text-gray-600 flex items-center gap-x-2 cursor-pointer relative"
-                        onClick={() => toggle("categories")}
-                    >
+                    <div className="px-3 py-2 text-gray-600 flex items-center gap-x-2 cursor-pointer relative"
+                         onClick={() => toggle("categories")}>
                         <span>دسته بندی ها</span>
                         <IoIosArrowDown className={`${open.categories ? "rotate-180" : ""} transition`}/>
                     </div>
 
-                    {/* Dropdown */}
                     {open.categories && (
                         <div
-                            className="absolute top-full right-0-0 mt-1 max-h-56 overflow-y-auto w-44 bg-gray-100 border border-gray-300 rounded shadow-lg z-50">
+                            className="absolute top-full right-0 mt-1 max-h-56 overflow-y-auto w-44 bg-gray-100 border border-gray-300 rounded shadow-lg z-50">
                             <ul className="flex flex-col">
-                                {categories?.map((cat: CategoryType) => (
+                                {categories.map(cat => (
                                     <li key={cat._id}>
-                                        <Link
-                                            href={`/products?category=${cat._id}`}
-                                            className="block px-2 py-1.5 text-sm text-gray-800 hover:bg-gray-200 border-b border-gray-200"
-                                        >
+                                        <Link href={`/products?category=${cat._id}`}
+                                              className="block px-2 py-1.5 text-sm text-gray-800 hover:bg-gray-200 border-b border-gray-200">
                                             {cat.name}
                                         </Link>
                                     </li>
@@ -129,10 +132,8 @@ export default function Header({user, categories}: Props) {
                         </div>
                     )}
 
-                    <form
-                        onSubmit={handleSearch}
-                        className="flex flex-1 items-center gap-x-3 border-r py-2 px-3 border-gray-300"
-                    >
+                    <form onSubmit={handleSearch}
+                          className="flex flex-1 items-center gap-x-3 border-r py-2 px-3 border-gray-300">
                         <input
                             className="flex-1 outline-none ring-0"
                             type="text"
@@ -149,46 +150,41 @@ export default function Header({user, categories}: Props) {
                 {/* Actions (cart + user) */}
                 <div className="flex items-center gap-x-3.5">
                     {/* Basket */}
-                    {!isLoadingCart ? (
+                    {!isLoadingUserCart ? (
                         <div className="relative">
-                            <button
-                                className={`header-button relative ${open.basket ? "z-50" : ""}`}
-                                onClick={() => toggle("basket")}
-                            >
+                            <button className={`header-button relative ${open.basket ? "z-50" : ""}`}
+                                    onClick={() => toggle("basket")}>
                                 <IoCartOutline/>
                                 <span
                                     className="absolute flex justify-center items-center size-4 -top-0.5 -right-0.5 text-[12px] bg-primary rounded-full text-white"
                                 >
-                                    {basketCount.toLocaleString("fa-IR")}
+                                  {basketCount.toLocaleString("fa-IR")}
                                 </span>
                             </button>
 
                             {open.basket && <Overlay closeOverlay={() => toggle("basket")}/>}
                             <div
-                                className={`absolute top-full left-0 w-80 sm:w-[362px] shadow-primary bg-white rounded-lg transition-all duration-200 ${
-                                    open.basket ? 'opacity-100 visible z-30' : 'opacity-0 invisible z-0'
-                                }`}
+                                className={`absolute top-full left-0 w-80 sm:w-[362px] shadow-primary bg-white rounded-lg transition-all duration-200 
+                                ${open.basket ? 'opacity-100 visible z-30' : 'opacity-0 invisible z-0'}`}
                             >
-                                {/* Header */}
                                 <div className="flex justify-between h-14 px-3 items-center bg-orange-100 rounded-t-lg">
                                     <span className="shadowed-text">سبد خرید من</span>
                                     <span className="text-sm">{basketCount.toLocaleString("fa-IR")} محصول</span>
                                 </div>
                                 <div className="flex flex-col">
-                                    {cart?.items?.length ? (
+                                    {cartItems.length ? (
                                         <>
-                                            {cart.items.map((item: ProductCartItem) => (
-                                                <ProductBasketCard key={item.product._id} item={item}/>
+                                            {cartItems.map((item, index) => (
+                                                <ProductBasketCard key={index} item={item}/>
                                             ))}
-
                                             <div className="mt-5 px-5 pb-5">
                                                 <div
                                                     className="flex items-center justify-between border-t border-neutral-200 pt-4 mb-5">
                                                     <span>مبلغ قابل پرداخت:</span>
-                                                    <span className="font-semibold">
-                                                        {basketTotal.toLocaleString("fa-IR")} تومان
-                                                    </span>
+                                                    <span
+                                                        className="font-semibold">{basketTotal.toLocaleString("fa-IR")} تومان</span>
                                                 </div>
+
                                                 <Link href="/cart" className="primary-button">
                                                     مشاهده سبد خرید
                                                 </Link>
@@ -217,36 +213,23 @@ export default function Header({user, categories}: Props) {
                     {/* User */}
                     {user ? (
                         <div className="relative hidden md:block">
-                            <button
-                                className={`header-button relative ${open.userMenu ? "z-50" : ""}`}
-                                onClick={() => toggle("userMenu")}
-                            >
+                            <button className={`header-button relative ${open.userMenu ? "z-50" : ""}`}
+                                    onClick={() => toggle("userMenu")}>
                                 <HiOutlineUser/>
                             </button>
 
                             {open.userMenu && <Overlay closeOverlay={() => toggle("userMenu")}/>}
                             <div
-                                className={`absolute shadow-sm shadow-primary left-0 top-full w-64 bg-white p-5 pb-3.5 rounded-lg transition ${
-                                    open.userMenu ? 'opacity-100 visible z-30' : 'opacity-0 invisible z-0'
-                                }`}
-                            >
-                                {/* User header */}
+                                className={`absolute shadow-sm shadow-primary left-0 top-full w-64 bg-white p-5 pb-3.5 rounded-lg transition ${open.userMenu ? 'opacity-100 visible z-30' : 'opacity-0 invisible z-0'}`}>
                                 <div className="flex items-center border-b border-gray-300 gap-x-2 pb-2">
-                                    <Image
-                                        width={50}
-                                        height={50}
-                                        className="rounded-full"
-                                        src="/no-profile.jpg"
-                                        alt="noProfile"
-                                    />
+                                    <Image width={50} height={50} className="rounded-full" src="/no-profile.jpg"
+                                           alt="noProfile"/>
                                     <div className="flex flex-col gap-y-0.5">
                                         <span className="text-sm font-bold">{user.name}</span>
-                                        <span
-                                            className="text-gray-600 text-[11px] font-semibold">{user.email}</span>
+                                        <span className="text-gray-600 text-[11px] font-semibold">{user.email}</span>
                                     </div>
                                 </div>
 
-                                {/* Menu */}
                                 <ul className="border-b border-gray-300 py-1 mb-1">
                                     {user.role === "admin" && (
                                         <li>
@@ -266,7 +249,6 @@ export default function Header({user, categories}: Props) {
                                     ))}
                                 </ul>
 
-                                {/* Logout */}
                                 <button className="header-menu__item hover:bg-red-500" onClick={handleLogout}>
                                     <IoLogOutOutline/>
                                     <span className="text-base">خروج</span>
@@ -277,17 +259,13 @@ export default function Header({user, categories}: Props) {
                         <Link href="/login" className="primary-button !hidden md:!flex">
                             ورود | عضویت
                         </Link>
-                    )
-                    }
+                    )}
                 </div>
 
                 {/* Mobile Sidebar */}
                 {open.sidebar && <Overlay closeOverlay={() => toggle("sidebar")}/>}
                 <div
-                    className={`fixed top-0 right-0 h-full w-64 bg-white text-sm z-50 transform transition-transform duration-300 ease-in-out ${
-                        open.sidebar ? 'translate-x-0' : 'translate-x-full'
-                    } md:hidden`}
-                >
+                    className={`fixed top-0 right-0 h-full w-64 bg-white text-sm z-50 transform transition-transform duration-300 ease-in-out ${open.sidebar ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
                     {user ? (
                         <div className="flex items-center bg-gray-100 gap-x-3 p-3">
                             <Image width={50} height={50} className="rounded-full" src="/no-profile.jpg"
@@ -312,10 +290,8 @@ export default function Header({user, categories}: Props) {
                             const isActive = item.href === pathname;
                             return (
                                 <li key={i}>
-                                    <Link
-                                        href={item.href}
-                                        className={`header-menu__item hover:bg-primary ${isActive ? "shadowed-text" : "text-gray-800"}`}
-                                    >
+                                    <Link href={item.href}
+                                          className={`header-menu__item hover:bg-primary ${isActive ? "shadowed-text" : "text-gray-800"}`}>
                                         {item.icon && <item.icon/>}
                                         <span className="text-base">{item.title}</span>
                                     </Link>
@@ -327,5 +303,4 @@ export default function Header({user, categories}: Props) {
             </div>
         </header>
     )
-        ;
 }

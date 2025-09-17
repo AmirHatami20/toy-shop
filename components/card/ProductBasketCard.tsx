@@ -4,13 +4,24 @@ import {ProductCartItem} from '@/types';
 import {useDeleteCartItem} from '@/hooks/useCart';
 import {GoTrash} from "react-icons/go";
 import toast from "react-hot-toast";
+import {useSession} from "next-auth/react";
+import {useGuestCart} from "@/context/GuestCartContext";
 
 export default function ProductBasketCard({item}: { item: ProductCartItem }) {
+    const {data: session} = useSession();
+    const user = session?.user;
+
     const deleteItem = useDeleteCartItem();
+    const guestCartContext = useGuestCart();
 
     const handleDelete = () => {
-        deleteItem.mutate(item.product._id as string);
-        toast.success("محصول از سبد خرید شما حذف شد.");
+        if (user) {
+            deleteItem.mutate(item.product._id as string);
+            toast.success("محصول از سبد خرید شما حذف شد.");
+        } else {
+            guestCartContext.removeItem(item.product._id as string);
+            toast.success("محصول از سبد خرید شما حذف شد.");
+        }
     };
 
     return (
