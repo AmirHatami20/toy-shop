@@ -21,7 +21,7 @@ const ProductSchema = new Schema(
         },
         totalSells: {type: Number, default: 0},
         discount: {type: Number, default: 0},
-        finalPrice: {type: Number, required: true},
+        finalPrice: {type: Number},
     },
     {timestamps: true}
 );
