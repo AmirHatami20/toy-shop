@@ -6,6 +6,7 @@ import Link from "next/link";
 import {useDeleteProduct} from "@/hooks/useProduct";
 import toast from "react-hot-toast";
 import {AxiosError} from "axios";
+import Spinner from "@/components/Spinner";
 
 export default function ProductCard({product}: { product: ProductType }) {
     const deleteProduct = useDeleteProduct();
@@ -84,9 +85,9 @@ export default function ProductCard({product}: { product: ProductType }) {
                 </Link>
                 <button
                     className="rounded-full bg-red-600 w-10 h-10 text-white flex items-center justify-center text-lg"
-                    onClick={() => handelDeleteProduct}
+                    onClick={() => handelDeleteProduct(product._id as string)}
                 >
-                    <FaRegTrashAlt/>
+                    {!deleteProduct.isPending ? <FaRegTrashAlt/> : <Spinner size={18} color="red"/>}
                 </button>
             </div>
         </div>

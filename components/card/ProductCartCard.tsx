@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import {useGuestCart} from "@/context/GuestCartContext";
 import {useSession} from "next-auth/react";
 import {AxiosError} from "axios";
+import Spinner from "@/components/Spinner";
 
 interface Props {
     item: ProductCartItem;
@@ -127,9 +128,8 @@ export default function ProductCartCard({item}: Props) {
                             onBlur={handleBlur}
                         />
                     ) : (
-                        <div className="w-10 h-7 flex items-center justify-center bg-gray-200 rounded">
-                            <div
-                                className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
+                        <div className="w-8 h-7 flex items-center justify-center bg-gray-200 rounded">
+                            <Spinner size={18}/>
                         </div>
                     )}
 
@@ -150,12 +150,7 @@ export default function ProductCartCard({item}: Props) {
                     onClick={handleDelete}
                     disabled={deleteCartItem.isPending}
                 >
-                    {!deleteCartItem.isPending ? (
-                        <GoTrash/>
-                    ) : (
-                        <div
-                            className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                    )}
+                    {!deleteCartItem.isPending ? <GoTrash/> : <Spinner size={14} color="red" />}
                 </button>
             </div>
         </div>

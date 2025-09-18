@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import {useSession} from "next-auth/react";
 import {useGuestCart} from "@/context/GuestCartContext";
 import {AxiosError} from "axios";
+import Spinner from "@/components/Spinner";
 
 export default function ProductBasketCard({item}: { item: ProductCartItem }) {
     const {data: session} = useSession();
@@ -59,7 +60,7 @@ export default function ProductBasketCard({item}: { item: ProductCartItem }) {
                 onClick={handleDelete}
                 className="flex items-center justify-center bg-gray-100 rounded-full p-2 text-red-500 text-sm hover:text-red-700"
             >
-                <GoTrash/>
+                {!deleteItem.isPending ? <GoTrash/> : <Spinner size={14} color="red"/>}
             </button>
         </div>
     );

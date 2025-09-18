@@ -8,6 +8,7 @@ import {AxiosError} from "axios";
 import toast from "react-hot-toast";
 import {CategoryType} from "@/types";
 import Overlay from "@/components/Overlay";
+import Spinner from "@/components/Spinner";
 
 export default function Page() {
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -73,7 +74,7 @@ export default function Page() {
                                 onClick={() => handleDelete(category._id ?? '')}
                                 className="flex items-center justify-center w-7 h-7 bg-white rounded-full border border-gray-300 text-red-600"
                             >
-                                <IoTrashOutline/>
+                                {!deleteCategory.isPending ? <IoTrashOutline/> : <Spinner color="red"/>}
                             </button>
                         </div>
                     ))}
