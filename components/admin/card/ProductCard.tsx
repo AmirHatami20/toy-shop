@@ -85,7 +85,7 @@ export default function ProductCard({product}: { product: ProductType }) {
                 </Link>
                 <button
                     className="rounded-full bg-red-600 w-10 h-10 text-white flex items-center justify-center text-lg"
-                    onClick={() => handelDeleteProduct(product._id as string)}
+                    onClick={() => handelDeleteProduct(product.shortName)}
                 >
                     {!deleteProduct.isPending ? <FaRegTrashAlt/> : <Spinner size={18} color="red"/>}
                 </button>
