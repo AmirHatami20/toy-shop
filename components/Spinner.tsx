@@ -5,7 +5,7 @@ interface SpinnerProps {
     color?: string;
 }
 
-const Spinner: React.FC<SpinnerProps> = ({size = 16, color = "gray"}) => {
+const Spinner: React.FC<SpinnerProps> = ({size = 16, color = "#9CA3AF"}) => {
     return (
         <div
             className={`animate-spin rounded-full border-2 border-t-transparent border-[${color}]`}
