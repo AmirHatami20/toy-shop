@@ -8,6 +8,7 @@ import {GoTrash} from "react-icons/go";
 import toast from "react-hot-toast";
 import {useGuestCart} from "@/context/GuestCartContext";
 import {useSession} from "next-auth/react";
+import {AxiosError} from "axios";
 
 interface Props {
     item: ProductCartItem;
@@ -25,7 +26,13 @@ export default function ProductCartCard({item}: Props) {
 
     const handleUpdateQuantity = (qty: number) => {
         if (user) {
-            updateQuantity.mutate({productId: item.product._id as string, quantity: qty});
+            try {
+                updateQuantity.mutate({productId: item.product._id as string, quantity: qty});
+            } catch (error) {
+                const err = error as AxiosError<{ error?: string }>;
+                const message = err.response?.data?.error || "خطایی رخ داده است.";
+                toast.error(message);
+            }
         } else {
             guestCartContext.updateItem(item.product._id as string, qty);
         }
@@ -55,16 +62,18 @@ export default function ProductCartCard({item}: Props) {
     };
 
     const handleDelete = () => {
-        try {
-            if (user) {
+        if (user) {
+            try {
                 deleteCartItem.mutate(item.product._id as string);
-            } else {
-                guestCartContext.removeItem(item.product._id as string);
+                toast.success("محصول از سبد خرید حذف شد");
+            } catch (error) {
+                const err = error as AxiosError<{ error?: string }>;
+                const message = err.response?.data?.error || "خطایی رخ داده است.";
+                toast.error(message);
             }
+        } else {
+            guestCartContext.removeItem(item.product._id as string);
             toast.success("محصول از سبد خرید حذف شد");
-        } catch (error) {
-            console.error(error);
-            toast.error("خطا در حذف محصول");
         }
     };
 

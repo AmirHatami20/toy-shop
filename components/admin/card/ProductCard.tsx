@@ -3,9 +3,25 @@ import {ProductType} from "@/types";
 import {FaEye, FaRegTrashAlt} from "react-icons/fa";
 import {MdOutlineEdit} from "react-icons/md";
 import Link from "next/link";
+import {useDeleteProduct} from "@/hooks/useProduct";
+import toast from "react-hot-toast";
+import {AxiosError} from "axios";
 
 export default function ProductCard({product}: { product: ProductType }) {
+    const deleteProduct = useDeleteProduct();
+
     const mainImage = product.images[0] as string;
+
+    const handelDeleteProduct = async (id: string) => {
+        try {
+            await deleteProduct.mutateAsync(id)
+            toast.success("محصول با موفقیت حذف شد.")
+        } catch (error) {
+            const err = error as AxiosError<{ error?: string }>;
+            const message = err.response?.data?.error || 'خطایی رخ داده است.';
+            toast.error(message);
+        }
+    }
 
     return (
         <div
@@ -33,7 +49,7 @@ export default function ProductCard({product}: { product: ProductType }) {
                                 <span className="text-gray-400 line-through text-[13px] pb-2">
                                     {product.price.toLocaleString("fa-IR")}
                                 </span>
-                                ) : null
+                            ) : null
                             }
                             <p className="text-gray-700 text-sm font-medium">
                                 {product.finalPrice?.toLocaleString("fa-IR")}{" "}
@@ -68,6 +84,7 @@ export default function ProductCard({product}: { product: ProductType }) {
                 </Link>
                 <button
                     className="rounded-full bg-red-600 w-10 h-10 text-white flex items-center justify-center text-lg"
+                    onClick={() => handelDeleteProduct}
                 >
                     <FaRegTrashAlt/>
                 </button>

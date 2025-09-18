@@ -6,6 +6,7 @@ import {GoTrash} from "react-icons/go";
 import toast from "react-hot-toast";
 import {useSession} from "next-auth/react";
 import {useGuestCart} from "@/context/GuestCartContext";
+import {AxiosError} from "axios";
 
 export default function ProductBasketCard({item}: { item: ProductCartItem }) {
     const {data: session} = useSession();
@@ -16,8 +17,14 @@ export default function ProductBasketCard({item}: { item: ProductCartItem }) {
 
     const handleDelete = () => {
         if (user) {
-            deleteItem.mutate(item.product._id as string);
-            toast.success("محصول از سبد خرید شما حذف شد.");
+            try {
+                deleteItem.mutate(item.product._id as string);
+                toast.success("محصول از سبد خرید شما حذف شد.");
+            } catch (error) {
+                const err = error as AxiosError<{ error?: string }>;
+                const message = err.response?.data?.error || "خظایی رخ داده است."
+                toast.error(message);
+            }
         } else {
             guestCartContext.removeItem(item.product._id as string);
             toast.success("محصول از سبد خرید شما حذف شد.");

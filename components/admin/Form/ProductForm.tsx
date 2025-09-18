@@ -159,8 +159,8 @@ export default function ProductForm({shortName}: { shortName?: string }) {
                 setImagePreviews([]);
             }
         } catch (error) {
-            const err = error as AxiosError<{ message?: string }>;
-            const message = err.response?.data?.message || "خطایی رخ داده است.";
+            const err = error as AxiosError<{ error?: string }>;
+            const message = err.response?.data?.error || "خطایی رخ داده است.";
             toast.error(message);
         }
     };

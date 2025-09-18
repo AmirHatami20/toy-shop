@@ -10,6 +10,7 @@ import {useCreateOrder} from "@/hooks/useOrder";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import {useRouter} from "next/navigation";
+import {AxiosError} from "axios";
 
 interface Props {
     user: UserType | null;
@@ -70,9 +71,9 @@ export default function CheckoutLayout({user}: Props) {
         return Object.keys(newErrors).length === 0;
     };
 
-    const createOrderMutation = useCreateOrder();
+    const createOrder = useCreateOrder();
 
-    const handleSubmitOrder = () => {
+    const handleSubmitOrder = async () => {
         if (!user) {
             toast.error("برای ثبت سفارش ابتدا وارد حساب کاربری خود شوید.");
             return;
@@ -99,12 +100,15 @@ export default function CheckoutLayout({user}: Props) {
             totalPrice: Number(basketTotal),
         };
 
-        createOrderMutation.mutate(orderData, {
-            onSuccess: () => {
-                toast.success("سفارش شما ثبت شد!");
-                router.push("/")
-            },
-        });
+        try {
+            await createOrder.mutateAsync(orderData);
+            toast.success("سفارش شما با موفیت ثبت شد.")
+            router.push("/")
+        } catch (error) {
+            const err = error as AxiosError<{ error: string }>
+            const message = err.response?.data?.error || "خطایی رخ داده است.";
+            toast.error(message);
+        }
     };
 
     return (
@@ -160,10 +164,10 @@ export default function CheckoutLayout({user}: Props) {
                             <div className="flex items-center justify-center px-3 py-4">
                                 <button
                                     onClick={handleSubmitOrder}
-                                    className={!createOrderMutation.isPending ? "primary-button w-full" : "primary-button-pending w-full"}
-                                    disabled={createOrderMutation.isPending}
+                                    className={!createOrder.isPending ? "primary-button w-full" : "primary-button-pending w-full"}
+                                    disabled={createOrder.isPending}
                                 >
-                                    {createOrderMutation.isPending ? "در حال ثبت" : "ثبت سفارش"}
+                                    {createOrder.isPending ? "در حال ثبت" : "ثبت سفارش"}
                                 </button>
                             </div>
                         </>

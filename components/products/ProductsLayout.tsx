@@ -97,8 +97,8 @@ export default function ProductsLayout({categories}: { categories: CategoryType[
                                             : "text-gray-800"
                                     }`}
                                 >
-                                      {item.name}
-                                    </span>
+                                    {item.name}
+                                </span>
                             ))}
                         </div>
                     </div>

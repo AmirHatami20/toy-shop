@@ -12,7 +12,7 @@ export async function PUT(
         const session = await auth();
 
         if (!session?.user?.id) {
-            return NextResponse.json({message: "کاربر یافت نشد."}, {status: 401});
+            return NextResponse.json({error: "کاربر یافت نشد."}, {status: 401});
         }
 
         const {id: productId} = await params;
@@ -20,12 +20,12 @@ export async function PUT(
 
         const cart = await Cart.findOne({user: session.user.id, status: "active"});
         if (!cart) {
-            return NextResponse.json({message: "سبد خرید یافت نشد."}, {status: 404});
+            return NextResponse.json({error: "سبد خرید یافت نشد."}, {status: 404});
         }
 
         const item = cart.items.find((i: { product: string }) => i.product.toString() === productId);
         if (!item) {
-            return NextResponse.json({message: "محصول در سبد خرید یافت نشد."}, {status: 404});
+            return NextResponse.json({error: "محصول در سبد خرید یافت نشد."}, {status: 404});
         }
 
         item.quantity = quantity;
@@ -34,7 +34,7 @@ export async function PUT(
         return NextResponse.json({message: "تعداد محصول بروزرسانی شد.", cart});
     } catch (err) {
         console.error("PUT /cart/:id error:", err);
-        return NextResponse.json({message: "خطا در بروزرسانی محصول."}, {status: 500});
+        return NextResponse.json({error: "خطا در بروزرسانی محصول."}, {status: 500});
     }
 }
 
@@ -47,14 +47,14 @@ export async function DELETE(
         const session = await auth();
 
         if (!session?.user?.id) {
-            return NextResponse.json({message: "کاربر یافت نشد."}, {status: 401});
+            return NextResponse.json({error: "کاربر یافت نشد."}, {status: 401});
         }
 
         const {id: productId} = await params;
 
         const cart = await Cart.findOne({user: session.user.id, status: "active"});
         if (!cart) {
-            return NextResponse.json({message: "سبد خرید یافت نشد."}, {status: 404});
+            return NextResponse.json({error: "سبد خرید یافت نشد."}, {status: 404});
         }
 
         cart.items = cart.items.filter((item: { product: string }) => item.product.toString() !== productId);
@@ -63,6 +63,6 @@ export async function DELETE(
         return NextResponse.json({message: "محصول حذف شد.", cart});
     } catch (err) {
         console.error("DELETE /cart/:id error:", err);
-        return NextResponse.json({message: "خطا در حذف محصول."}, {status: 500});
+        return NextResponse.json({error: "خطا در حذف محصول."}, {status: 500});
     }
 }

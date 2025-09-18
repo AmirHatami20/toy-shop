@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json(orders, {status: 200});
     } catch (error) {
         console.error("GET /cart error:", error);
-        return NextResponse.json({message: "خطا در گرفتن سفارش."}, {status: 500});
+        return NextResponse.json({error: "خطا در گرفتن سفارش."}, {status: 500});
     }
 }
 
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
         const session = await auth();
 
         if (!session?.user?.id) {
-            return NextResponse.json({message: "کاربر یافت نشد."}, {status: 401});
+            return NextResponse.json({error: "کاربر یافت نشد."}, {status: 401});
         }
 
         const data: CreateOrderBody = await req.json()
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(newOrder, {status: 201});
     } catch (error) {
         console.error(error);
-        return NextResponse.json({message: "خطا در ثبت خرید."}, {status: 500});
+        return NextResponse.json({error: "خطا در ثبت خرید."}, {status: 500});
     }
 
 }

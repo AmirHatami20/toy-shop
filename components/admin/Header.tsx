@@ -14,7 +14,9 @@ export default function Header() {
             className="flex flex-wrap items-center gap-4 justify-center md:justify-between bg-orange-50 border-b border-primary/50 shadow-sm shadow-primary p-4"
         >
             <div className="flex flex-col">
-                <span className="text-lg">خوش امدید، {user?.name?.split(' ')[0]} جان</span>
+                <span className="text-lg">
+                    خوش امدید، {user?.name?.split(' ')[0]} جان
+                </span>
                 <span className="text-sm text-gray-600">اینجا میتونی محصولات و کاربران را کنترل کنی.</span>
             </div>
             <form

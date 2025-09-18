@@ -12,6 +12,7 @@ import {BiAddToQueue} from "react-icons/bi";
 import {PiBasketLight} from "react-icons/pi";
 import ProductGallery from "@/components/product/ProductGallery";
 import {useGuestCart} from "@/context/GuestCartContext";
+import {AxiosError} from "axios";
 
 interface Props {
     product: ProductType;
@@ -38,13 +39,18 @@ export default function ProductLayout({product, relatedProducts}: Props) {
 
         try {
             if (user) {
-                // کاربر لاگین شده → API
-                await addToCartMutation.mutateAsync({productId: product._id as string, quantity});
+                try {
+                    await addToCartMutation.mutateAsync({productId: product._id as string, quantity});
+                    toast.success("محصول به سبد خرید اضافه شد");
+                } catch (error) {
+                    const err = error as AxiosError<{ error?: string }>;
+                    const message = err.response?.data?.error || "خطایی رخ داده است.";
+                    toast.error(message);
+                }
             } else {
-                // مهمان → localStorage
                 guestCart.addItem(product, quantity);
+                toast.success("محصول به سبد خرید اضافه شد");
             }
-            toast.success("محصول به سبد خرید اضافه شد");
         } catch (err) {
             console.error(err);
             toast.error("خطا در افزودن محصول به سبد خرید");

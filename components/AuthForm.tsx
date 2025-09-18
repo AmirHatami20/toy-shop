@@ -51,12 +51,11 @@ export default function AuthForm({mode, title}: AuthFormProps) {
                     router.push("/");
                 }
             } catch (error) {
-                const err = error as AxiosError<{ message?: string }>;
-                const message = err.response?.data?.message || "خطایی رخ داده است.";
+                const err = error as AxiosError<{ error?: string }>;
+                const message = err.response?.data?.error || "خطایی رخ داده است.";
                 toast.error(message);
             }
         } else {
-
             try {
                 const res = await signIn("credentials", {
                     redirect: false,
@@ -71,8 +70,8 @@ export default function AuthForm({mode, title}: AuthFormProps) {
                     router.push("/");
                 }
             } catch (error) {
-                const err = error as AxiosError<{ message?: string }>;
-                const message = err.response?.data?.message || "خطایی رخ داده است.";
+                const err = error as AxiosError<{ error?: string }>;
+                const message = err.response?.data?.error || "خطایی رخ داده است.";
                 toast.error(message);
             }
         }

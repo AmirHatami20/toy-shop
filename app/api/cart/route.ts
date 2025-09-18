@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     const session = await auth();
 
     if (!session?.user?.id) {
-        return NextResponse.json({message: "کاربر یافت نشد."}, {status: 401});
+        return NextResponse.json({error: "کاربر یافت نشد."}, {status: 401});
     }
 
     const cart = await Cart.findOne({
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         const session = await auth();
 
         if (!session?.user?.id) {
-            return NextResponse.json({message: "کاربر یافت نشد."}, {status: 401});
+            return NextResponse.json({error: "کاربر یافت نشد."}, {status: 401});
         }
 
         const {productId, quantity} = await req.json();
@@ -55,6 +55,6 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({message: "محصول به سبد خرید اضافه شد.", cart});
     } catch (err) {
         console.error("POST /cart error:", err);
-        return NextResponse.json({message: "خطا در افزودن محصول به سبد خرید."}, {status: 500});
+        return NextResponse.json({error: "خطا در افزودن محصول به سبد خرید."}, {status: 500});
     }
 }

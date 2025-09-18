@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
         const existingUser = await User.findOne({email});
 
         if (existingUser) {
-            return NextResponse.json({message: "این ایمیل قبلاً ثبت شده است."}, {status: 400});
+            return NextResponse.json({error: "این ایمیل قبلاً ثبت شده است."}, {status: 400});
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
@@ -25,6 +25,6 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({status: 201});
     } catch {
-        return NextResponse.json({message: "مشکلی در ثبت‌نام پیش آمده است."}, {status: 500});
+        return NextResponse.json({error: "مشکلی در ثبت‌نام پیش آمده است."}, {status: 500});
     }
 }
