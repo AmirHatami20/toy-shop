@@ -60,7 +60,7 @@ export default function ProductBasketCard({item}: { item: ProductCartItem }) {
                 onClick={handleDelete}
                 className="flex items-center justify-center bg-gray-100 rounded-full p-2 text-red-500 text-sm hover:text-red-700"
             >
-                {!deleteItem.isPending ? <GoTrash/> : <Spinner size={14} color="red"/>}
+                {!deleteItem.isPending ? <GoTrash/> : <Spinner size={14} color="#e11d48"/>}
             </button>
         </div>
     );

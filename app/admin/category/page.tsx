@@ -74,7 +74,7 @@ export default function Page() {
                                 onClick={() => handleDelete(category._id ?? '')}
                                 className="flex items-center justify-center w-7 h-7 bg-white rounded-full border border-gray-300 text-red-600"
                             >
-                                {!deleteCategory.isPending ? <IoTrashOutline/> : <Spinner color="red"/>}
+                                {!deleteCategory.isPending ? <IoTrashOutline/> : <Spinner color="#e11d48"/>}
                             </button>
                         </div>
                     ))}
