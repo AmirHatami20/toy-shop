@@ -9,7 +9,7 @@ export default function ProductCard({product}: { product: ProductType }) {
 
     return (
         <div
-            className="relative flex flex-col items-center h-[350px] bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-transform duration-300 hover:scale-105 p-4 m-3">
+            className="relative flex flex-col items-center h-[370px] bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-transform duration-300 hover:scale-105 p-4 m-3">
             {discount ? (
                 <span
                     className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md z-10">
@@ -21,7 +21,7 @@ export default function ProductCard({product}: { product: ProductType }) {
                 <img
                     src={mainImage}
                     alt={title}
-                    className="w-full h-48 object-cover object-top rounded-md"
+                    className="w-full h-52 object-cover object-top rounded-md"
                 />
             </Link>
 
