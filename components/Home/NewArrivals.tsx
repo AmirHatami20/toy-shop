@@ -6,7 +6,7 @@ import {BsArrowUpLeft} from "react-icons/bs";
 import {productService} from "@/services/productService";
 
 export async function NewArrivals() {
-    const productData = await productService.getAll();
+    const productData = await productService.getAll({limit:8});
     const products = productData?.products;
 
     return (
