@@ -27,7 +27,7 @@ export default function ProductCard({product}: { product: ProductType }) {
 
             <div className="w-full flex flex-col items-center gap-2 py-3 text-center">
                 <Link href={`/product/${shortName}`}>
-                    <h2 className="text-lg font-semibold">{title}</h2>
+                    <h2 className="text-lg font-semibold line-clamp-1">{title}</h2>
                 </Link>
 
                 {discount ? (
