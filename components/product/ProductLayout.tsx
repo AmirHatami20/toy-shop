@@ -76,7 +76,7 @@ export default function ProductLayout({product, relatedProducts}: Props) {
                         <h1 className="text-2xl font-bold">{product.title}</h1>
 
                         {product.description && (
-                            <p className="text-gray-600">{product.description}</p>
+                            <p className="text-gray-600 line-clamp-4">{product.description}</p>
                         )}
 
                         <span className="font-semibold">ویژگی های محصول:</span>
