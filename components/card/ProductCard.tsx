@@ -9,7 +9,8 @@ export default function ProductCard({product}: { product: ProductType }) {
 
     return (
         <div
-            className="relative flex flex-col items-center h-[370px] bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-transform duration-300 hover:scale-105 p-4 m-3">
+            className="relative flex flex-col items-center h-[340px] bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-transform duration-300 hover:scale-105 p-3.5 m-3"
+        >
             {discount ? (
                 <span
                     className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md z-10">
@@ -21,13 +22,13 @@ export default function ProductCard({product}: { product: ProductType }) {
                 <img
                     src={mainImage}
                     alt={title}
-                    className="w-full h-54 object-contain object-top rounded-md"
+                    className="w-full h-48 object-contain object-top rounded-md"
                 />
             </Link>
 
-            <div className="w-full flex flex-col items-center gap-2 py-3 text-center">
+            <div className="w-full flex flex-col items-center py-2 text-center">
                 <Link href={`/product/${shortName}`}>
-                    <h2 className="text-lg font-semibold line-clamp-1">{title}</h2>
+                    <h2 className="font-semibold h-11 line-clamp-2">{title}</h2>
                 </Link>
 
                 {discount ? (
@@ -46,7 +47,7 @@ export default function ProductCard({product}: { product: ProductType }) {
                 )}
             </div>
 
-            <Link href={`/product/${shortName}`} className="primary-button">
+            <Link href={`/product/${shortName}`} className="primary-button text-sm">
                 اطلاعات محصول
             </Link>
         </div>
