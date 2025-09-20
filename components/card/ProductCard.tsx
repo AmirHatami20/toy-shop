@@ -21,7 +21,7 @@ export default function ProductCard({product}: { product: ProductType }) {
                 <img
                     src={mainImage}
                     alt={title}
-                    className="w-full h-52 object-cover object-top rounded-md"
+                    className="w-full h-54 object-contain object-top rounded-md"
                 />
             </Link>
 
@@ -32,7 +32,7 @@ export default function ProductCard({product}: { product: ProductType }) {
 
                 {discount ? (
                     <div className="flex items-center gap-x-2">
-                        <span className="text-gray-400 line-through text-[13px] pb-2">
+                        <span className="text-gray-400 line-through text-[13px]">
                             {price?.toLocaleString("fa-IR")} تومان
                         </span>
                         <p className="text-gray-700 font-medium">
