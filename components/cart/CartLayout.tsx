@@ -61,7 +61,6 @@ export default function CartLayout({user}: Props) {
 
     const checkoutHref = user ? "/checkout" : "/login";
     const checkoutLabel = user ? "پرداخت و تکمیل خرید" : "ورود برای ادامه خرید";
-
     return (
         <main className="container my-12">
             <section className="grid grid-cols-12 gap-y-5 gap-6 lg:gap-x-7">
