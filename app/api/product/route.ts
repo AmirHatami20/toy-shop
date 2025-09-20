@@ -30,19 +30,19 @@ export async function POST(req: NextRequest) {
         }
 
         const imageFiles = formData.getAll("images") as File[];
+
         if (!imageFiles.length) {
             return NextResponse.json({error: "حداقل یک تصویر الزامی است"}, {status: 400});
         }
 
         const uploadedImages: string[] = [];
+
         for (const file of imageFiles) {
             const url = await uploadImage(file);
             uploadedImages.push(url);
         }
 
-        const attributes = formData.get("attributes")
-            ? JSON.parse(formData.get("attributes") as string)
-            : {};
+        const attributes = formData.get("attributes") ? JSON.parse(formData.get("attributes") as string) : {};
 
 
         const newProduct = await Product.create({

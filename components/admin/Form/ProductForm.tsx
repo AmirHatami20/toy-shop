@@ -11,6 +11,7 @@ import {useGetCategories} from '@/hooks/useCategory';
 import FormField from '@/components/admin/Form/FormField';
 import {GoTrash} from 'react-icons/go';
 import {AxiosError} from "axios";
+import {validateProductForm} from "@/utils/validation";
 
 export default function ProductForm({shortName}: { shortName?: string }) {
     const [form, setForm] = useState<ProductType>({
@@ -77,7 +78,6 @@ export default function ProductForm({shortName}: { shortName?: string }) {
         }
     };
 
-
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files) return;
@@ -112,15 +112,8 @@ export default function ProductForm({shortName}: { shortName?: string }) {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const newErrors: { [key: string]: string } = {};
-        if (!form.title) newErrors.title = 'عنوان محصول الزامی است.';
-        if (!form.shortName) newErrors.shortName = 'نام کوتاه الزامی است.';
-        if (!form.price) newErrors.price = 'قیمت الزامی است.';
-        if (!form.category) newErrors.category = 'دسته‌بندی الزامی است.';
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            toast.error('لطفاً فیلدهای ضروری را پر کنید.');
+        if (!validateProductForm(form, setErrors)) {
+            toast.error("لطفاً فیلدهای ضروری را پر کنید.");
             return;
         }
 

@@ -22,7 +22,6 @@ export const useAddToCart = () => {
             cartService.create({productId, quantity}),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ["cart"]});
-            queryClient.refetchQueries({queryKey: ["cart"]});
         },
     });
 };
@@ -59,4 +58,5 @@ export const useDeleteCartItem = () => {
         },
     });
 };
+
 

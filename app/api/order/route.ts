@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
         await connectDB();
 
         const {searchParams} = new URL(req.url);
+
         const userId = searchParams.get("userId");
 
         let orders;

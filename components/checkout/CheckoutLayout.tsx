@@ -11,6 +11,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import {useRouter} from "next/navigation";
 import {AxiosError} from "axios";
+import {validateCheckoutForm} from "@/utils/validation";
 
 interface Props {
     user: UserType | null;
@@ -42,35 +43,6 @@ export default function CheckoutLayout({user}: Props) {
         return acc + qty * price;
     }, 0);
 
-    const validateForm = (): boolean => {
-        const newErrors: { [key: string]: string } = {};
-        const persian = /^[\u0600-\u06FF\s]+$/;
-
-        if (!form.firstName) newErrors.firstName = "نام الزامی است";
-        else if (!persian.test(form.firstName)) newErrors.firstName = "نام باید فارسی باشد";
-
-        if (!form.lastName) newErrors.lastName = "نام خانوادگی الزامی است";
-        else if (!persian.test(form.lastName)) newErrors.lastName = "نام خانوادگی باید فارسی باشد";
-
-        if (!form.phone) newErrors.phone = "شماره همراه الزامی است";
-        else if (!/^09\d{9}$/.test(form.phone)) newErrors.phone = "شماره همراه معتبر نیست";
-
-        if (!form.province) newErrors.province = "انتخاب استان الزامی است";
-        if (!form.city) newErrors.city = "انتخاب شهر الزامی است";
-
-        if (!form.street) newErrors.street = "وارد کردن خیابان الزامی است";
-        if (!form.alley) newErrors.alley = "وارد کردن کوچه الزامی است";
-
-        if (form.buildingNumber === 0) newErrors.buildingNumber = "وارد کردن پلاک الزامی است";
-        if (form.apartment === 0) newErrors.apartment = "وارد کردن واحد الزامی است";
-
-        if (!form.postalCode) newErrors.postalCode = "کد پستی الزامی است.";
-        else if (!/^\d{10}$/.test(form.postalCode)) newErrors.postalCode = "کدپستی باید ۱۰ رقمی باشد";
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
     const createOrder = useCreateOrder();
 
     const handleSubmitOrder = async () => {
@@ -79,7 +51,7 @@ export default function CheckoutLayout({user}: Props) {
             return;
         }
 
-        if (!validateForm()) {
+        if (!validateCheckoutForm(form, setErrors)) {
             toast.error("لطفا فیلد ها را درست وارد نمایید.");
             return;
         }

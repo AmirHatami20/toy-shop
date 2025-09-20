@@ -31,10 +31,10 @@ export async function PUT(
 ) {
     try {
         await connectDB();
+
         const {shortName} = await params;
 
         const formData = await req.formData();
-        console.log(formData);
 
         const title = formData.get("title") as string | null;
         const newShortName = formData.get("shortName") as string | null;
@@ -44,11 +44,10 @@ export async function PUT(
         const category = formData.get("category") as string | null;
         const discount = formData.get("discount") ? Number(formData.get("discount")) : null;
 
-        const attributes = formData.get("attributes")
-            ? JSON.parse(formData.get("attributes") as string)
-            : {};
+        const attributes = formData.get("attributes") ? JSON.parse(formData.get("attributes") as string) : {};
 
         const imageFiles = formData.getAll("images") as File[];
+
         const uploadedImages: string[] = [];
 
         if (imageFiles.length) {
