@@ -9,7 +9,6 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-/.idea
 
 # testing
 /coverage
@@ -36,6 +35,8 @@ yarn-error.log*
 
 # vercel
 .vercel
+/.idea
+
 
 # typescript
 *.tsbuildinfo

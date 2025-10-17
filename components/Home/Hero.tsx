@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Hero() {
     return (
         <section
-            className="w-full bg-gradient-to-l from-orange-200 via-orange-50 to-yellow-50 rounded-md shadow-md p-6 md:p-12 mt-1"
+            className="w-full bg-gradient-to-l from-orange-200 via-orange-50 to-yellow-50 rounded-md shadow-md p-5 md:p-10 mt-1"
         >
             <div className="container flex flex-col md:flex-row items-center justify-between gap-8">
                 <div className="flex-1">
