@@ -30,7 +30,7 @@ export default function ProductsLayout({categories}: { categories: CategoryType[
     const [showFilterModal, setShowFilterModal] = useState(false);
 
     const {data: productData, isLoading: isLoadingProducts} = useGetProducts({
-        limit: 6,
+        limit:12,
         page,
         search,
         category: selectedCategory,

@@ -22,9 +22,10 @@ interface Props {
 
 const breakpointsConfig = {
     0: {slidesPerView: 1},
-    640: {slidesPerView: 2},
-    1024: {slidesPerView: 3},
-    1280: {slidesPerView: 4},
+    360: {slidesPerView: 2},
+    640: {slidesPerView: 3},
+    1024: {slidesPerView: 4},
+    1280: {slidesPerView: 5},
 };
 
 function SwiperWrapper({title, subtitle, items, white}: Props) {

@@ -6,7 +6,7 @@ import {BsArrowUpLeft} from "react-icons/bs";
 import {productService} from "@/services/productService";
 
 export async function NewArrivals() {
-    const productData = await productService.getAll({limit:8});
+    const productData = await productService.getAll({limit:10});
     const products = productData?.products;
 
     return (
@@ -28,7 +28,7 @@ export async function NewArrivals() {
                     <BsArrowUpLeft/>
                 </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 mt-4">
                 {products.map((product: ProductType) => (
                     <ProductCard key={product._id} product={product}/>
                 ))}
