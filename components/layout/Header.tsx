@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 import Overlay from "@/components/Overlay";
 import {HiOutlineUser} from "react-icons/hi2";
 import {HEADER_NAV, HEADER_USER_MENU} from "@/constant";
-import {LiaAngleLeftSolid} from "react-icons/lia";
 import {RiAdminLine} from "react-icons/ri";
 import {IoIosArrowDown} from "react-icons/io";
 import {CategoryType, ProductCartItem, UserType} from "@/types";
@@ -220,10 +219,16 @@ export default function Header({user, categories}: Props) {
 
                             {open.userMenu && <Overlay closeOverlay={() => toggle("userMenu")}/>}
                             <div
-                                className={`absolute shadow-sm shadow-primary left-0 top-full w-64 bg-white p-5 pb-3.5 rounded-lg transition ${open.userMenu ? 'opacity-100 visible z-30' : 'opacity-0 invisible z-0'}`}>
+                                className={`absolute shadow-sm shadow-primary left-0 top-full w-64 bg-white p-5 pb-3.5 rounded-lg transition ${open.userMenu ? 'opacity-100 visible z-30' : 'opacity-0 invisible z-0'}`}
+                            >
                                 <div className="flex items-center border-b border-gray-300 gap-x-2 pb-2">
-                                    <Image width={50} height={50} className="rounded-full" src="/no-profile.jpg"
-                                           alt="noProfile"/>
+                                    <Image
+                                        width={50}
+                                        height={50}
+                                        className="rounded-full"
+                                        src="/no-profile.jpg"
+                                        alt="noProfile"
+                                    />
                                     <div className="flex flex-col gap-y-0.5">
                                         <span className="text-sm font-bold">{user.name}</span>
                                         <span className="text-gray-600 text-[11px] font-semibold">{user.email}</span>
@@ -265,40 +270,117 @@ export default function Header({user, categories}: Props) {
                 {/* Mobile Sidebar */}
                 {open.sidebar && <Overlay closeOverlay={() => toggle("sidebar")}/>}
                 <div
-                    className={`fixed top-0 right-0 h-full w-64 bg-white text-sm z-50 transform transition-transform duration-300 ease-in-out ${open.sidebar ? 'translate-x-0' : 'translate-x-full'} md:hidden`}>
+                    className={`fixed overflow-y-auto top-0 right-0 h-full w-64 bg-white text-sm z-50 transform transition-transform duration-300 ease-in-out ${
+                        open.sidebar ? "translate-x-0" : "translate-x-full"
+                    } lg:hidden`}
+                >
                     {user ? (
-                        <div className="flex items-center bg-gray-100 gap-x-3 p-3">
-                            <Image width={50} height={50} className="rounded-full" src="/no-profile.jpg"
-                                   alt="noProfile"/>
+                        <div className="flex items-center gap-x-3 p-3">
+                            <Image
+                                width={50}
+                                height={50}
+                                className="rounded-full"
+                                src="/no-profile.jpg"
+                                alt="noProfile"
+                            />
                             <div className="flex flex-col gap-y-0.5">
-                                <span className="text-sm font-bold">{user.name}</span>
-                                <span className="text-gray-600 text-[11px] font-semibold">{user.email}</span>
+                            <span className="text-sm font-bold">
+                                {user.name}
+                            </span>
+                                <span className="text-text-muted text-[11px] font-semibold">
+                                {user.email}
+                            </span>
                             </div>
-                            <Link href="/profile" className="absolute left-2 text-lg text-gray-600 my-auto">
-                                <LiaAngleLeftSolid/>
-                            </Link>
                         </div>
                     ) : (
-                        <Link href="/login"
-                              className="bg-orange-100 flex items-center justify-center py-4 w-full text-lg shadowed-text">
-                            ورود یا ثبت نام
+                        <Link
+                            href="/login"
+                            className="bg-orange-100 flex items-center justify-center py-4 w-full text-lg shadowed-text"
+                        >
+                            ورود | ثبت نام
                         </Link>
                     )}
 
-                    <ul className="flex flex-col py-1 px-3">
-                        {HEADER_NAV.map((item, i) => {
-                            const isActive = item.href === pathname;
-                            return (
-                                <li key={i}>
-                                    <Link href={item.href}
-                                          className={`header-menu__item hover:bg-primary ${isActive ? "shadowed-text" : "text-gray-800"}`}>
-                                        {item.icon && <item.icon/>}
-                                        <span className="text-base">{item.title}</span>
-                                    </Link>
+                    {/* Sidebar links */}
+                    <div className="px-3">
+                        <ul className="flex flex-col py-1.5 border-b border-gray-300">
+                            <li className="pt-3 text-xs text-primary-dark">
+                                <span>لینک ها</span>
+                            </li>
+                            {HEADER_NAV.map((item, i) => {
+                                const isActive = item.href === pathname;
+                                return (
+                                    <li key={i}>
+                                        <Link
+                                            href={item.href}
+                                            className={`header-menu__item hover:bg-primary ${
+                                                isActive ? "text-primary" : ""
+                                            }`}
+                                        >
+                                            {item.icon && <item.icon/>}
+                                            <span className="text-base">{item.title}</span>
+                                        </Link>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+
+                        {/* User */}
+                        {user && (
+                            <ul className="flex flex-col py-1.5 border-b border-gray-300">
+                                <li className="pt-3 text-xs text-primary-dark">
+                                    <span>عملیات کاربر</span>
                                 </li>
-                            )
-                        })}
-                    </ul>
+                                {user && user.role === "admin" && (
+                                    <li>
+                                        <Link href="/admin" className="header-menu__item hover:bg-primary">
+                                            <RiAdminLine/>
+                                            <span className="text-base">پنل ادمین</span>
+                                        </Link>
+                                    </li>
+                                )}
+                                {HEADER_USER_MENU.map((item, i) => (
+                                    <li key={i}>
+                                        <Link
+                                            href={item.href}
+                                            className="header-menu__item hover:bg-primary"
+                                        >
+                                            {item.icon && <item.icon size={22}/>}
+                                            <span className="text-base">{item.title}</span>
+                                        </Link>
+                                    </li>
+                                ))}
+                                <button
+                                    className="header-menu__item hover:bg-primary"
+                                    onClick={handleLogout}
+                                >
+                                    <IoLogOutOutline size={22}/>
+                                    <span className="text-base">خروج</span>
+                                </button>
+                            </ul>
+                        )}
+
+                        {/* Sidebar categories */}
+                        <ul className="flex flex-col py-1.5">
+                            <li className="pt-3 text-xs text-primary-dark">
+                                <span>دسته بندی ها</span>
+                            </li>
+
+                            {categories.map((cat, idx) => (
+                                <li key={idx}>
+                                    <div className="flex flex-col mt-2">
+                                        <Link
+                                            href={`/products?category=${cat._id}`}
+                                            className="flex items-center px-3 py-2 w-full justify-between hover:bg-primary"
+                                        >
+                                            {cat.name}
+                                        </Link>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+
+                    </div>
                 </div>
             </div>
         </header>

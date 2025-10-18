@@ -88,7 +88,7 @@ export default function ProductCartCard({item}: Props) {
                     <img
                         src={item.product.images[0]}
                         alt={item.product.title}
-                        className="h-40 sm:h-24 w-full sm:w-26 object-cover object-top rounded-md"
+                        className="h-56 sm:h-24 w-full sm:w-26 object-cover object-top rounded-md"
                     />
                 </Link>
                 <div className="flex flex-col gap-1.5">
@@ -97,12 +97,12 @@ export default function ProductCartCard({item}: Props) {
                         <span>قیمت:</span>
                         {item.product.discount ? (
                             <span className="text-gray-400 line-through text-[13px] pb-2">
-                {item.product.price?.toLocaleString("fa-IR")}
-              </span>
+                                {item.product.price?.toLocaleString("fa-IR")}
+                            </span>
                         ) : null}
                         <span className="text-sm text-gray-800">
-              {item.product.finalPrice?.toLocaleString("fa-IR")} تومان
-            </span>
+                          {item.product.finalPrice?.toLocaleString("fa-IR")} تومان
+                        </span>
                     </div>
                 </div>
             </div>
@@ -150,7 +150,7 @@ export default function ProductCartCard({item}: Props) {
                     onClick={handleDelete}
                     disabled={deleteCartItem.isPending}
                 >
-                    {!deleteCartItem.isPending ? <GoTrash/> : <Spinner size={14} color="red" />}
+                    {!deleteCartItem.isPending ? <GoTrash/> : <Spinner size={14} color="red"/>}
                 </button>
             </div>
         </div>

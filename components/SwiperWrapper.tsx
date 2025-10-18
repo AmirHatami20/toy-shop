@@ -98,11 +98,7 @@ function SwiperWrapper({title, subtitle, items, white}: Props) {
                         });
                     }}
                     breakpoints={breakpointsConfig}
-                    modules={[Pagination, Navigation, Autoplay]}
-                    autoplay={{
-                        delay: 3000,
-                        disableOnInteraction: false,
-                    }}
+                    modules={[Pagination, Navigation]}
                 >
                     {items.map((product) => (
                         <SwiperSlide key={product._id}>
