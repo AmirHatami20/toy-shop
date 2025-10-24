@@ -80,10 +80,38 @@
     .swiper-button {
         @apply bg-white hover:bg-slate-200 active:bg-slate-200 text-primary border border-primary text-[22px] p-2.5 rounded-full;
     }
+
+    .swiper-pagination-bullet {
+        @apply bg-gray-400 opacity-60 w-2.5 h-2.5 rounded-full transition-all;
+    }
+
+    .swiper-pagination-bullet-active {
+        @apply !bg-primary opacity-100 scale-125;
+    }
 }
 
 @layer base {
     button {
         cursor: pointer;
     }
+}
+
+/* Custom Scrollbar Style */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #ff7a00;
+    border-radius: 9999px;
+    border: 2px solid #f3f4f6;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #e86f00;
 }
