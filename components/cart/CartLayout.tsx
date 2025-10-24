@@ -20,7 +20,7 @@ export default function CartLayout({user}: Props) {
 
     const cartItems: ProductCartItem[] = user ? userCart?.items ?? [] : guestCartContext.items;
 
-    const { basketTotal, basketDiscount, payable } = cartItems.reduce(
+    const {basketTotal, basketDiscount, payable} = cartItems.reduce(
         (acc, item) => {
             const price = item.product.price ?? 0;
             const finalPrice = item.product.finalPrice ?? price;
@@ -35,8 +35,30 @@ export default function CartLayout({user}: Props) {
 
             return acc;
         },
-        { basketTotal: 0, basketDiscount: 0, payable: 0 }
+        {basketTotal: 0, basketDiscount: 0, payable: 0}
     );
+
+    // const basketTotal = cartItems.reduce((acc, item) => {
+    //     const price = item.product.price ?? 0;
+    //     const qty = item.quantity ?? 0;
+    //     return acc + price * qty;
+    // }, 0);
+
+    // const basketDiscount = cartItems.reduce((acc, item) => {
+    //     const price = item.product.price ?? 0;
+    //     const finalPrice = item.product.finalPrice ?? price;
+    //     const qty = item.quantity ?? 0;
+    //     const discount = (price - finalPrice) * qty;
+    //     return acc + discount;
+    // }, 0);
+
+    // const payable = cartItems.reduce((acc, item) => {
+    //     const price = item.product.price ?? 0;
+    //     const finalPrice = item.product.finalPrice ?? price;
+    //     const qty = item.quantity ?? 0;
+    //     const discount = (price - finalPrice) * qty;
+    //     return acc + (price * qty - discount);
+    // }, 0);
 
     if (user && isLoading) {
         return (

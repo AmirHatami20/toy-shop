@@ -13,6 +13,7 @@ import {PiBasketLight} from "react-icons/pi";
 import ProductGallery from "@/components/product/ProductGallery";
 import {useGuestCart} from "@/context/GuestCartContext";
 import {AxiosError} from "axios";
+import Spinner from "@/components/Spinner";
 
 interface Props {
     product: ProductType;
@@ -185,8 +186,14 @@ export default function ProductLayout({product, relatedProducts}: Props) {
                             disabled={product.stock <= 0}
                             className={product.stock > 0 ? "primary-button" : "primary-button-pending"}
                         >
-                            <BiAddToQueue size={20}/>
-                            افزودن به سبد خرید
+                            {!addToCartMutation.isPending ? (
+                                <>
+                                    <BiAddToQueue size={20}/>
+                                    افزودن به سبد خرید
+                                </>
+                            ) : (
+                                <Spinner size={25}/>
+                            )}
                         </button>
                         <Link href="/cart"
                               className="flex items-center justify-center gap-x-2 bg-white border border-primary py-2 w-full rounded shadow hover:bg-gray-200 transition">

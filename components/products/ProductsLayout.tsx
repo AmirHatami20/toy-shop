@@ -68,6 +68,7 @@ export default function ProductsLayout({categories}: { categories: CategoryType[
             <div className="flex flex-col lg:flex-row gap-5">
                 <ProductFilter
                     categories={categories}
+                    setPage={setPage}
                     selectedCategory={selectedCategory}
                     setSelectedCategory={setSelectedCategory}
                     searchInput={searchInput}

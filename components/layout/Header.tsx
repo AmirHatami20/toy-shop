@@ -379,7 +379,6 @@ export default function Header({user, categories}: Props) {
                                 </li>
                             ))}
                         </ul>
-
                     </div>
                 </div>
             </div>

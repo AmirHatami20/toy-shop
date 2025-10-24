@@ -11,6 +11,7 @@ interface Props {
     setSelectedCategory: (selectedCategory: string) => void;
     setShowFilterModal: (showFilterModal: boolean) => void;
     setShowSortModal: (showSortModal: boolean) => void;
+    setPage: (page: number) => void;
 }
 
 export default function ProductFilter(
@@ -21,7 +22,8 @@ export default function ProductFilter(
         selectedCategory,
         setSelectedCategory,
         setShowFilterModal,
-        setShowSortModal
+        setShowSortModal,
+        setPage
     }: Props
 ) {
     return (
@@ -55,7 +57,10 @@ export default function ProductFilter(
                                 ? "border-primary text-primary-dark"
                                 : "border-gray-300"
                         }`}
-                        onClick={() => setSelectedCategory("")}
+                        onClick={() => {
+                            setPage(1)
+                            setSelectedCategory("")
+                        }}
                     >
                         همه محصولات
                     </button>
@@ -68,7 +73,10 @@ export default function ProductFilter(
                                     ? "border-primary text-primary-dark"
                                     : "border-gray-300"
                             }`}
-                            onClick={() => setSelectedCategory(category._id as string)}
+                            onClick={() => {
+                                setPage(1)
+                                setSelectedCategory(category._id as string)
+                            }}
                         >
                             {category.name}
                         </button>

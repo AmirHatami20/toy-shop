@@ -8,19 +8,22 @@ export default function ProductCard({product}: { product: ProductType }) {
     return (
         <div className="flex flex-col space-y-2 bg-white shadow-sm rounded-md transition-transform p-3 m-1.5 md:m-2">
             <Link href={`/product/${shortName}`}>
-                <div className="relative w-full max-h-48 overflow-hidden rounded-md">
+                <div className="relative w-full h-48 overflow-hidden rounded-md">
+
                     <img
-                        className="w-full h-full object-contain bg-white"
+                        className={`w-full h-full object-contain bg-white transition-opacity duration-300`}
                         src={images[0]}
                         alt={title}
                     />
+
                     {discount ? (
                         <span
                             className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md z-10">
-              %{discount?.toLocaleString("fa-IR")}
-            </span>
+                            %{discount?.toLocaleString("fa-IR")}
+                        </span>
                     ) : null}
                 </div>
+
                 <p className="line-clamp-2 h-10 text-sm md:h-12 md:text-base mt-2 font-semibold">
                     {title}
                 </p>
@@ -30,7 +33,7 @@ export default function ProductCard({product}: { product: ProductType }) {
                 <div className="flex flex-col items-end">
                     {product.discount ? (
                         <span className="text-sm text-gray-500 line-through decoration-primary/70 md:text-base">
-                          {price.toLocaleString("fa-IR")}
+                            {price.toLocaleString("fa-IR")}
                         </span>
                     ) : null}
                     <p className="flex items-center gap-1 text-sm md:text-base">

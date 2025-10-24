@@ -1,4 +1,5 @@
 'use client'
+
 import React from 'react';
 import {ProductCartItem} from '@/types';
 import {useDeleteCartItem} from '@/hooks/useCart';
@@ -16,14 +17,14 @@ export default function ProductBasketCard({item}: { item: ProductCartItem }) {
     const deleteItem = useDeleteCartItem();
     const guestCartContext = useGuestCart();
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (user) {
             try {
-                deleteItem.mutate(item.product._id as string);
+                await deleteItem.mutateAsync(item.product._id as string);
                 toast.success("محصول از سبد خرید شما حذف شد.");
             } catch (error) {
                 const err = error as AxiosError<{ error?: string }>;
-                const message = err.response?.data?.error || "خظایی رخ داده است."
+                const message = err.response?.data?.error || "خطایی رخ داده است.";
                 toast.error(message);
             }
         } else {
@@ -31,6 +32,7 @@ export default function ProductBasketCard({item}: { item: ProductCartItem }) {
             toast.success("محصول از سبد خرید شما حذف شد.");
         }
     };
+
 
     return (
         <div className="flex items-center justify-between px-3 py-3">

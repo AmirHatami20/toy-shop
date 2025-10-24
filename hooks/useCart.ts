@@ -1,11 +1,11 @@
 import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
 import {cartService} from "@/services/cartService";
-import {CartType, ProductCartItem} from "@/types";
 import {useSession} from "next-auth/react";
 
 // GET ALL CART
 export const useGetCart = () => {
     const {data: session} = useSession();
+
     return useQuery({
         queryKey: ["cart"],
         queryFn: () => cartService.getAll(),
@@ -45,18 +45,8 @@ export const useDeleteCartItem = () => {
 
     return useMutation({
         mutationFn: (productId: string) => cartService.delete(productId),
-        onSuccess: (_, productId) => {
-            queryClient.setQueryData(["cart"], (oldCart: CartType) => {
-                if (!oldCart) return oldCart;
-                return {
-                    ...oldCart,
-                    items: oldCart.items.filter(
-                        (item: ProductCartItem) => item.product._id !== productId
-                    ),
-                };
-            });
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: ["cart"]});
         },
     });
 };
-
-
