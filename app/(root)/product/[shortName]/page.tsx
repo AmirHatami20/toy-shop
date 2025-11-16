@@ -38,8 +38,7 @@ export default async function Page({params}: PageProps) {
     }
 
     const productsData = await productService.getAll({category: product.category._id});
-    const productsArray: ProductType[] = Array.isArray(productsData?.products) ? productsData.products : [];
-    const relatedProducts = productsArray.filter((p) => p.shortName !== shortName);
+    const relatedProducts = productsData.filter((p : ProductType) => p.shortName !== shortName);
 
     return <ProductLayout product={product} relatedProducts={relatedProducts}/>;
 }
